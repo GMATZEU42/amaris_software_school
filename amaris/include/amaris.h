@@ -3,7 +3,7 @@
 #ifdef _WIN32
 #define AMARIS_API __declspec(dllexport)
 #else
-// ToDo: insert linux export
+#define AMARIS_API __attribute__ ((visibility ("default")))
 #endif
 
 namespace amaris

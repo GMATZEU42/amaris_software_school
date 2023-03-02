@@ -12,9 +12,9 @@ foreach(file ${INCLUDES})
 endforeach()
 
 include_directories(include)
+include_directories(../amaris/include)
 
 add_executable(school ${SOURCES_LIST} ${INCLUDES_LIST})
 
-include_directories(../amaris/include)
 target_link_libraries(school PUBLIC amaris)
 target_compile_features(school PUBLIC cxx_std_17)
