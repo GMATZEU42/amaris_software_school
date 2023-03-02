@@ -13,7 +13,9 @@ endforeach()
 
 include_directories(include)
 
-add_executable(amaris ${SOURCES_LIST} ${INCLUDES_LIST})
+add_executable(school ${SOURCES_LIST} ${INCLUDES_LIST})
 
+include_directories(../amaris/include)
+target_link_libraries(school PUBLIC amaris)
 
-target_compile_features(amaris PUBLIC cxx_std_17)
+target_compile_features(school PUBLIC cxx_std_17)

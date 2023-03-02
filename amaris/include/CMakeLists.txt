@@ -1,3 +1,4 @@
 set( INCLUDES 
-amaris.h
+	amaris.h
+	logger.h
 PARENT_SCOPE)
