@@ -2,6 +2,8 @@
 
 #include "amaris.h"
 
+#include "console.h"
+
 #include <string>
 #include <memory>
 #include <map>
@@ -12,7 +14,8 @@ namespace amaris
 	enum class LoggerType : unsigned int
 	{
 		FILE = 0,
-		CONSOLE = 1
+		CONSOLE = 1,
+		ALL
 	};
 
 	enum class LogLevel : unsigned int
@@ -28,22 +31,18 @@ namespace amaris
 	class AMARIS_API Logger
 	{
 	public:
-		explicit Logger(LoggerType type, std::filesystem::path filePath = std::filesystem::current_path(), std::string fileName = "tmp", std::string fileLog = "log");
+		explicit Logger(LoggerType type);
+		Logger(std::filesystem::path filePath, std::string fileName, std::string fileLog);
+		Logger(ConsoleColor color);
 		~Logger() {};
 		//
 		template <typename T> 
 		void log(LogLevel lvl, T log)
 		{
-			m_pLogger->log(m_levelStringMap.at(lvl) + " " + std::to_string(log));
+			m_pLogger->log(lvl, std::to_string(log));
 		}
 	private:
 		std::unique_ptr<LoggerBase> m_pLogger;
-		const std::map<LogLevel, std::string> m_levelStringMap{
-			{LogLevel::DEBUG, "DEBUG"}, 
-			{LogLevel::INFO, "INFO"}, 
-			{LogLevel::WARNING, "WARNING"}, 
-			{LogLevel::ERROR, "ERROR"} 
-		};
 	};
 
 	class AMARIS_API LoggerBase
@@ -51,7 +50,14 @@ namespace amaris
 	public:
 		LoggerBase() {};
 		virtual ~LoggerBase() {};
-		virtual void log(std::string log) = 0;
+		virtual void log(LogLevel lvl, std::string log) = 0;
+	protected:
+		const std::map<LogLevel, std::string> m_levelStringMap{
+			{LogLevel::DEBUG, "DEBUG"},
+			{LogLevel::INFO, "INFO"},
+			{LogLevel::WARNING, "WARNING"},
+			{LogLevel::ERROR, "ERROR"}
+		};
 	};
 
 
@@ -78,33 +84,45 @@ namespace amaris
 	public:
 		LoggerFile(std::filesystem::path filePath = std::filesystem::current_path(), std::string fileName = "tmp", std::string fileFormat = "log");
 		~LoggerFile() {};
-		void log(std::string log) override;
+		void log(LogLevel lvl, std::string log) override;
 	private:
 		std::string m_File;
 	private:
 		void logException(std::string e);
 	};
 	
-
 	class AMARIS_API LoggerConsole : public LoggerBase
 	{
 	public:
-		LoggerConsole() {};
+		LoggerConsole(ConsoleColor color = ConsoleColor::NATIVE) : m_console(color) {};
 		~LoggerConsole() {};
-		void log(std::string log) override;
+		void log(LogLevel lvl, std::string log) override;
 	private:
+		Console m_console;
 	};
 
 	template <>
-	void Logger::log(LogLevel level, std::string s)
+	void Logger::log(LogLevel lvl, std::string log)
 	{
-		m_pLogger->log(m_levelStringMap.at(level) + " " + s);
+		m_pLogger->log(lvl, log);
+	}
+
+	//template <>
+	//void Logger::log(LogLevel lvl, const std::string log)
+	//{
+	//	m_pLogger->log(lvl, log);
+	//}
+
+	template <>
+	void Logger::log(LogLevel lvl, char* log)
+	{
+		m_pLogger->log(lvl, std::string(log));
 	}
 
 	template <>
-	void Logger::log(LogLevel level, char* s)
+	void Logger::log(LogLevel lvl, const char* log)
 	{
-		m_pLogger->log(m_levelStringMap.at(level) + " " + std::string(s));
+		m_pLogger->log(lvl, std::string(log));
 	}
 }
 

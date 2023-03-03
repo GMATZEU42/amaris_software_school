@@ -7,7 +7,7 @@ namespace amaris
 {
 	void sayHello()
 	{
-		Console cns(ConsoleColor::BLUE);
+		Console cns(ConsoleColor::YELLOW);
 		cns.print("Let's join Amaris!");
 	}
 }

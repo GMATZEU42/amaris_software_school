@@ -78,7 +78,7 @@ TEST_F(LoggerFile_Test_Suite, TestLogCreationCustom)
 	logPath = std::filesystem::path("C:\\tmp");
 	logName = std::string("TestLogCreationCustom");
 	logFormat = std::string("customFormat");
-	testLogger = std::make_unique<amaris::Logger>(amaris::LoggerType::FILE, logPath, logName, logFormat);
+	testLogger = std::make_unique<amaris::Logger>(logPath, logName, logFormat);
 	testLogger->log(amaris::LogLevel::INFO, testStr);
 	GTEST_ASSERT_TRUE(findStrFromLog(testStr));
 }
@@ -138,4 +138,14 @@ TEST_F(LoggerFile_Test_Suite, TestLogMoreLogs)
 	testLogger->log(amaris::LogLevel::WARNING, 42);
 	testLogger->log(amaris::LogLevel::WARNING, 43);
 	GTEST_ASSERT_TRUE(findStrFromLog({ {"42"}, {"43"} }));
+}
+
+// Test for LoggerConsole
+TEST(LoggerConsole_Test_Suite, Test_Print)
+{
+	auto clogger = std::make_unique<amaris::Logger>(amaris::LoggerType::CONSOLE);
+	clogger->log(amaris::LogLevel::INFO, "This is an info");
+	clogger->log(amaris::LogLevel::WARNING, "This is a warning");
+	clogger->log(amaris::LogLevel::DEBUG, "This is a debug info");
+	clogger->log(amaris::LogLevel::ERROR, "This is an error");
 }

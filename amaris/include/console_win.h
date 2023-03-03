@@ -7,7 +7,7 @@ namespace amaris
 {
 	void Console::changeColor(ConsoleColor color)
 	{
-		WORD c;
+		WORD c = 0U;
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		switch (color)
 		{

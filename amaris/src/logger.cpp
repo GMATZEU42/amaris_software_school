@@ -6,20 +6,30 @@
 
 namespace amaris
 {	
-	Logger::Logger(LoggerType type, std::filesystem::path filePath, std::string fileName, std::string fileLog)
+	Logger::Logger(LoggerType type)
 	{
 		switch (type)
 		{
 		case amaris::LoggerType::FILE:
-			m_pLogger = std::make_unique<LoggerFile>(filePath, fileName, fileLog);
+			m_pLogger = std::make_unique<LoggerFile>();
 			break;
 		case amaris::LoggerType::CONSOLE:
 			m_pLogger = std::make_unique<LoggerConsole>();
 			break;
 		default:
 			break;
-		}		
+		}
+	}
+
+	Logger::Logger(std::filesystem::path filePath, std::string fileName, std::string fileLog)
+	{
+		m_pLogger = std::make_unique<LoggerFile>(filePath, fileName, fileLog);
 	}	
+
+	Logger::Logger(ConsoleColor color)
+	{
+		m_pLogger = std::make_unique<LoggerConsole>(color);
+	}
 
 	LoggerFile::LoggerFile(std::filesystem::path filePath, std::string fileName, std::string fileFormat)
 	{
@@ -39,7 +49,7 @@ namespace amaris
 		}
 	}
 
-	void LoggerFile::log(std::string s)
+	void LoggerFile::log(LogLevel lvl, std::string s)
 	{
 		try
 		{
@@ -47,7 +57,7 @@ namespace amaris
 			file.open(m_File, std::fstream::out | std::fstream::app);
 			if (file.is_open())
 			{
-				file << s << std::endl;
+				file << m_levelStringMap.at(lvl) << ": " << s << std::endl;
 				file.close();
 			}
 			else
@@ -77,8 +87,27 @@ namespace amaris
 		}
 	}
 
-	void LoggerConsole::log(std::string s)
+	void LoggerConsole::log(LogLevel lvl, std::string s)
 	{
-		//ToDo
+		ConsoleColor cc;
+		switch (lvl)
+		{
+		case amaris::LogLevel::DEBUG:
+			cc = ConsoleColor::BLUE;
+			break;			
+		case amaris::LogLevel::INFO:
+			cc = ConsoleColor::GREEN;
+			break;
+		case amaris::LogLevel::WARNING:
+			cc = ConsoleColor::YELLOW;
+			break;
+		case amaris::LogLevel::ERROR:
+			cc = ConsoleColor::RED;
+			break;
+		default:
+			cc = ConsoleColor::NATIVE;
+			break;
+		}
+		m_console.print(m_levelStringMap.at(lvl) + ": " + s, cc);
 	}
 }
