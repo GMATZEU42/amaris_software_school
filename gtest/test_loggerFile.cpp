@@ -17,6 +17,12 @@ protected:
 		logFormat = "log";
 	};
 
+	void TearDown() override
+	{
+		auto filePath = (logPath / std::filesystem::path(logName + "." + logFormat));
+		std::filesystem::remove(filePath);
+	};
+
 	bool findStrFromLog(std::string s)
 	{
 		std::string file = (logPath / std::filesystem::path(logName)).string() + std::filesystem::path("." + logFormat).string();
@@ -34,6 +40,16 @@ protected:
 				}
 			}
 			fileStream.close();
+		}
+		return bFound;
+	}
+
+	bool findStrFromLog(std::vector<std::string> vString)
+	{
+		bool bFound = true;
+		for (auto s : vString)
+		{
+			bFound &= findStrFromLog(s);
 		}
 		return bFound;
 	}
@@ -60,7 +76,7 @@ TEST_F(LoggerFile_Test_Suite, TestLogCreationCustom)
 	// Custom directory
 	testStr = "quarantatre";
 	logPath = std::filesystem::path("C:\\tmp");
-	logName = std::string("customName");
+	logName = std::string("TestLogCreationCustom");
 	logFormat = std::string("customFormat");
 	testLogger = std::make_unique<amaris::Logger>(amaris::LoggerType::FILE, logPath, logName, logFormat);
 	testLogger->log(amaris::LogLevel::INFO, testStr);
@@ -93,4 +109,33 @@ TEST_F(LoggerFile_Test_Suite, TestLogWarning)
 	testLogger = std::make_unique<amaris::Logger>(amaris::LoggerType::FILE);
 	testLogger->log(amaris::LogLevel::WARNING, testStr);
 	GTEST_ASSERT_TRUE(findStrFromLog("WARNING"));
+}
+
+TEST_F(LoggerFile_Test_Suite, TestLogNumeric)
+{
+	testLogger = std::make_unique<amaris::Logger>(amaris::LoggerType::FILE);
+	int int32 = 30;
+	unsigned int uInt32 = 31U;
+	float float32 = 3.14f;
+	double double64 = 2.7183;
+	testLogger->log(amaris::LogLevel::WARNING, int32);
+	testLogger->log(amaris::LogLevel::WARNING, uInt32);
+	testLogger->log(amaris::LogLevel::WARNING, float32);
+	testLogger->log(amaris::LogLevel::WARNING, double64);
+	GTEST_ASSERT_TRUE(findStrFromLog({ {"30"}, {"31"}, {"3.14"}, {"2.7183"} }));
+}
+
+TEST_F(LoggerFile_Test_Suite, TestLogInt)
+{
+	testLogger = std::make_unique<amaris::Logger>(amaris::LoggerType::FILE);
+	testLogger->log(amaris::LogLevel::WARNING, 42);
+	GTEST_ASSERT_TRUE(findStrFromLog("42"));
+}
+
+TEST_F(LoggerFile_Test_Suite, TestLogMoreLogs)
+{
+	testLogger = std::make_unique<amaris::Logger>(amaris::LoggerType::FILE);
+	testLogger->log(amaris::LogLevel::WARNING, 42);
+	testLogger->log(amaris::LogLevel::WARNING, 43);
+	GTEST_ASSERT_TRUE(findStrFromLog({ {"42"}, {"43"} }));
 }

@@ -1,4 +1,5 @@
 #include "amaris.h"
+#include "console.h"
 
 #include <iostream>
 
@@ -6,6 +7,7 @@ namespace amaris
 {
 	void sayHello()
 	{
-		std::cout << "Let's join Amaris!" << std::endl;
+		Console cns(ConsoleColor::BLUE);
+		cns.print("Let's join Amaris!");
 	}
 }

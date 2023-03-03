@@ -1,15 +1,5 @@
-add_subdirectory(src)
-add_subdirectory(include)
-
-foreach(file ${SOURCES})
-	set(file "src/${file}")
-	list(APPEND SOURCES_LIST ${file})
-endforeach()
-
-foreach(file ${INCLUDES})
-	set(file "include/${file}")
-	list(APPEND INCLUDES_LIST ${file})
-endforeach()
+file(GLOB INCLUDES_LIST "include/*.h" )
+file(GLOB SOURCES_LIST "src/*.cpp" )
 
 include_directories(include)
 include_directories(../amaris/include)

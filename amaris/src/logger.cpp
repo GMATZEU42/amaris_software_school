@@ -43,10 +43,11 @@ namespace amaris
 	{
 		try
 		{
-			auto file = std::fstream(m_File, std::ios_base::out);
+			std::fstream file;
+			file.open(m_File, std::fstream::out | std::fstream::app);
 			if (file.is_open())
 			{
-				file << s;
+				file << s << std::endl;
 				file.close();
 			}
 			else
