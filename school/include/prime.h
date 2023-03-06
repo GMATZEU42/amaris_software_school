@@ -5,7 +5,7 @@
 
 namespace prime
 {
-	using PrimeType = unsigned short;
+	using PrimeType = unsigned long long;
 	class Primer
 	{
 	public:
