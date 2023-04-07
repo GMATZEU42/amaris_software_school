@@ -6,5 +6,5 @@ include_directories(../amaris/include)
 
 add_executable(school ${SOURCES_LIST} ${INCLUDES_LIST})
 
-target_link_libraries(school PUBLIC amaris)
 target_compile_features(school PUBLIC cxx_std_17)
+target_link_libraries(school PUBLIC amaris)

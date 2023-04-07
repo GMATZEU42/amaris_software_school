@@ -107,12 +107,6 @@ namespace amaris
 		m_pLogger->log(lvl, log);
 	}
 
-	//template <>
-	//void Logger::log(LogLevel lvl, const std::string log)
-	//{
-	//	m_pLogger->log(lvl, log);
-	//}
-
 	template <>
 	void Logger::log(LogLevel lvl, char* log)
 	{

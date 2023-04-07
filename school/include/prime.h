@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <vector>
 #include <mutex>
 
@@ -9,17 +10,29 @@ namespace prime
 	class Primer
 	{
 	public:
-		Primer() {};
+		enum class Algorithm
+		{
+			NAIVE
+		};
+
+		Primer(std::filesystem::path strSave = std::filesystem::path());
 		~Primer() {};
-		void run();
-		bool isRunning();
+		void compute(Algorithm alg = Algorithm::NAIVE, PrimeType threshold = 0U);
+		bool isComputing();
+		void stopComputing() { m_run = false; }
 		bool isPrime(PrimeType v);
 		PrimeType getLast();
+		void save(std::filesystem::path path = std::filesystem::path());
+		void load(std::filesystem::path path = std::filesystem::path());
 		inline size_t getNumberOfPrime() { return m_primeList.size(); }
 	private:
-		std::vector<PrimeType> m_primeList{};
+		std::vector<PrimeType> m_primeList{ 2U };
 		std::mutex m_primeListMutex;
 		std::atomic<bool> m_run = false;
+		//
+		std::filesystem::path m_savedFile = std::filesystem::current_path() / std::filesystem::path("prime.txt");
+		//
+		void computeNaive(PrimeType threshold = 0U);
 	};
 
 	bool isPrime(PrimeType v);
