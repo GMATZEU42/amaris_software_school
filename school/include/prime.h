@@ -22,6 +22,7 @@ namespace prime
 		void stopComputing() { m_run = false; }
 		bool isPrime(PrimeType v);
 		PrimeType getLast();
+		const std::vector<PrimeType>& getPrimeList();
 		void save(std::filesystem::path path = std::filesystem::path());
 		void load(std::filesystem::path path = std::filesystem::path());
 		inline size_t getNumberOfPrime() { return m_primeList.size(); }
@@ -34,6 +35,4 @@ namespace prime
 		//
 		void computeNaive(PrimeType threshold = 0U);
 	};
-
-	bool isPrime(PrimeType v);
 }

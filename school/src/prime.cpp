@@ -7,23 +7,6 @@
 
 namespace prime
 {
-	bool isPrime(PrimeType value)
-	{
-		if(value < 2)
-		{
-			return false;
-		}
-		else
-		{
-			int d = 2;
-			while (value % d != 0 && d <= value)
-			{
-				d++;
-			}
-			return (d == value);
-		}
-	}
-
 	Primer::Primer(std::filesystem::path saveFile)
 	{
 		load(saveFile);
@@ -51,6 +34,12 @@ namespace prime
 		return m_primeList.back();
 	}
 
+	const std::vector<PrimeType>& Primer::getPrimeList()
+	{
+		std::lock_guard<std::mutex> lock(m_primeListMutex);
+		return m_primeList;
+	}
+
 	bool Primer::isComputing()
 	{
 		return m_run;
@@ -63,16 +52,19 @@ namespace prime
 
 	void Primer::save(std::filesystem::path filePath)
 	{
-		std::string pathStr = filePath.empty() ? m_savedFile.string() : filePath.string();			
-		std::fstream stream = std::fstream(pathStr, std::fstream::out | std::fstream::app);
-		if (stream.is_open())
+		if (!m_run)
 		{
-			for (auto p : m_primeList)
+			std::string pathStr = filePath.empty() ? m_savedFile.string() : filePath.string();
+			std::fstream stream = std::fstream(pathStr, std::fstream::out | std::fstream::app);
+			if (stream.is_open())
 			{
-				stream << p << std::endl;
+				for (auto p : m_primeList)
+				{
+					stream << p << std::endl;
 
+				}
+				stream.close();
 			}
-			stream.close();
 		}
 	}
 
@@ -98,9 +90,8 @@ namespace prime
 	void Primer::computeNaive(PrimeType threshold)
 	{
 		m_run.store(true);
-		std::lock_guard<std::mutex> lock(m_primeListMutex);
 		bool bPrime;
-		for (PrimeType n = 3; n < std::numeric_limits<PrimeType>::max() && m_run && n < threshold; ++n)
+		for (PrimeType n = m_primeList.back() + 1U; n < std::numeric_limits<PrimeType>::max() && m_run && n < threshold; ++n)
 		{
 			bPrime = true;
 			for (const auto& prime : m_primeList)
@@ -113,6 +104,7 @@ namespace prime
 			}
 			if (bPrime)
 			{
+				std::lock_guard<std::mutex> lock(m_primeListMutex);
 				m_primeList.emplace_back(n);
 			}
 		}

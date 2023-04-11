@@ -108,6 +108,6 @@ namespace amaris
 			cc = ConsoleColor::NATIVE;
 			break;
 		}
-		m_console.print(m_levelStringMap.at(lvl) + ": " + s, cc);
+		m_console.print(m_levelStringMap.at(lvl) + ": " + s + "\n", cc);
 	}
 }

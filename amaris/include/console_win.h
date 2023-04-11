@@ -1,7 +1,9 @@
 #pragma once
 
 #include "console.h"
-#include "windows.h"
+
+#include <Windows.h>
+#include <conio.h>
 
 namespace amaris
 {
@@ -16,14 +18,23 @@ namespace amaris
 		case amaris::ConsoleColor::NATIVE:
 			c = 7U;
 			break;
+		case amaris::ConsoleColor::GREY:
+			c = 8U;
+			break;
 		case amaris::ConsoleColor::BLUE:
 			c = 9U;
+			break;
+		case amaris::ConsoleColor::GREEN:
+			c = 10U;
+			break;
+		case amaris::ConsoleColor::AZURE:
+			c = 11U;
 			break;
 		case amaris::ConsoleColor::RED:
 			c = 12U;
 			break;
-		case amaris::ConsoleColor::GREEN:
-			c = 10U;
+		case amaris::ConsoleColor::MAGENTA:
+			c = 13U;
 			break;
 		case amaris::ConsoleColor::YELLOW:
 			c = 14U;

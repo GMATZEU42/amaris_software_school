@@ -60,7 +60,6 @@ namespace amaris
 		};
 	};
 
-
 	class AMARIS_API LoggerFile : public LoggerBase
 	{
 		enum class ExceptionType

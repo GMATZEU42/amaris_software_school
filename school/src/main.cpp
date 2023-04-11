@@ -2,30 +2,19 @@
 //
 
 #include "amaris.h"
-#include "logger.h"
-#include "prime.h"
+#include "main_application.h"
 
 #include <thread>
 #include <chrono>
 
-//using namespace std::chrono_literals;
-
-int main()
+int main(int argc, char* argv[])
 {
 	amaris::sayHello();
-	prime::Primer primer;
-	std::thread primeThd(&prime::Primer::compute, &primer);
-	//
-	amaris::Logger logger = amaris::Logger(amaris::LoggerType::CONSOLE);
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-	while (primer.isComputing())
-	{
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		logger.log(amaris::LogLevel::DEBUG, "last prime computed: " + std::to_string(primer.getLast()));
-	}
-	logger.log(amaris::LogLevel::INFO, "Number of prime computed: " + std::to_string(primer.getNumberOfPrime()));
-	primer.save();
-	//
-	primeThd.join();
+	MainApplication app;
+	// Init application
+	app.init(argc, argv);
+	// Run the application
+	app.run();
+	// Exit the application
 	amaris::sayHello();
 }
