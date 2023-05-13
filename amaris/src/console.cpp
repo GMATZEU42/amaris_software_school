@@ -10,25 +10,6 @@
 
 namespace amaris
 {
-	void Console::print(std::string s, ConsoleColor color)
-	{
-		std::lock_guard<std::mutex> lock(m_consoleMutex);
-		if (color != ConsoleColor::DEFAULT)
-		{
-			changeColor(color);
-		}
-		if (m_bAutoEndl)
-		{
-			std::cout << m_prompt << s << std::endl;
-		}
-		else
-		{
-			std::cout << m_prompt << s;
-		}
-		changeColor(m_color);
-	}
-
-
 	std::string Console::getInput(ConsoleColor color)
 	{
 		printPrompt(color);
