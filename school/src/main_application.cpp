@@ -7,7 +7,7 @@
 #include <iostream>
 
 
-// Public methods
+// Public methods 
 MainApplication::MainApplication()
 {};
 
